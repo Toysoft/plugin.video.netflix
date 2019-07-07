@@ -15,12 +15,24 @@ ART_SIZE_POSTER = '_342x684'
 ART_SIZE_FHD = '_1920x1080'
 ART_SIZE_SD = '_665x375'
 
-LENGTH_ATTRIBUTES = {
+COUNT_ATTRIBUTES = {
+    'count_references': lambda r, context, key: count_references(r[context][key]),
     'stdlist': lambda r, context, key: len(r[context][key]),
     'stdlist_wid': lambda r, context, uid, key: len(r[context][uid][key]),
     'searchlist': lambda r, context, key: len(next(r[context][key].itervalues()))
 }
 """Predefined lambda expressions that return the number of video results within a path response dict"""
+
+LENGTH_ATTRIBUTES = {
+    # video_list query only gets results limited to ~40 and does not have length param, so count items
+    'video_list': lambda r, context, key: len(r[context][key]),
+    'video_list_sorted': (lambda r, context: r[context]['length']),
+    'video_list_sorted_wid': (lambda r, context, uid: r[context][uid]['length']),
+    'seasons_list': lambda r, context, uid, key: r[context][uid][key]['summary']['length'],
+    'episodes_list': lambda r, context, key: r[context][key]['summary']['length']
+}
+"""Predefined lambda expressions that return the value of the length attribute from within a path response dict"""
+
 
 ART_PARTIAL_PATHS = [
     ['boxarts', [ART_SIZE_SD, ART_SIZE_FHD, ART_SIZE_POSTER], 'jpg'],
@@ -39,6 +51,10 @@ VIDEO_LIST_PARTIAL_PATHS = [
      {'from': 0, 'to': 10}, ['id', 'name']]
 ] + ART_PARTIAL_PATHS
 
+VIDEO_LIST_DATA_INFO_PARTIAL_PATHS = [
+    [['id', 'length', 'listId', 'requestId', 'trackIds']]
+]
+
 VIDEO_LIST_BASIC_PARTIAL_PATHS = [
     [['title', 'queue', 'watched']]
 ]
@@ -51,6 +67,7 @@ GENRE_PARTIAL_PATHS = [
 ]
 
 SEASONS_PARTIAL_PATHS = [
+    ['seasonList', 'summary'],
     ['seasonList', RANGE_SELECTOR, 'summary'],
     ['title']
 ] + ART_PARTIAL_PATHS

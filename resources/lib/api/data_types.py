@@ -62,6 +62,7 @@ class VideoList(object):
     """A video list"""
     # pylint: disable=invalid-name
     def __init__(self, path_response, list_id=None):
+        common.debug('VideoList data: {}'.format(path_response))
         self.perpetual_range_selector = path_response.get('_perpetual_range_selector')
         self.data = path_response
         self.id = common.VideoId(
@@ -94,7 +95,7 @@ class VideoListSorted(object):
     """A video list"""
     # pylint: disable=invalid-name
     def __init__(self, path_response, context_name, context_id, req_sort_order_type):
-        # common.debug('VideoListSorted data: {}'.format(path_response))
+        common.debug('VideoListSorted data: {}'.format(path_response))
         self.perpetual_range_selector = path_response.get('_perpetual_range_selector')
         self.data = path_response
         self.context_name = context_name
@@ -190,6 +191,7 @@ class SeasonList(object):
 class EpisodeList(object):
     """A list of episodes. Includes tvshow art."""
     def __init__(self, videoid, path_response):
+        common.debug('EpisodeList data: {}'.format(path_response))
         self.perpetual_range_selector = path_response.get('_perpetual_range_selector')
         self.data = path_response
         self.videoid = videoid

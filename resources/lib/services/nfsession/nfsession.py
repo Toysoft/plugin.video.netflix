@@ -263,23 +263,28 @@ class NetflixSession(object):
     @common.addonsignals_return_call
     @needs_login
     @common.time_execution(immediate=True)
-    def perpetual_path_request(self, paths, length_params, perpetual_range_start=None):
+    def perpetual_path_request(self, paths, length_params, count_params, perpetual_range_start=None):
         """Perform a perpetual path request against the Shakti API to retrieve
         a possibly large video list. If the requested video list's size is
         larger than MAX_PATH_REQUEST_SIZE, multiple path requests will be
         executed with forward shifting range selectors and the results will
         be combined into one path response."""
-        response_type, length_args = length_params
+        length_type, length_args = length_params
+        count_type, count_args = count_params
         context_name = length_args[0]
-        response_length = apipaths.LENGTH_ATTRIBUTES[response_type]
+        length_lambda = apipaths.LENGTH_ATTRIBUTES[length_type]
+        count_lambda = apipaths.COUNT_ATTRIBUTES[count_type]
 
-        request_size = apipaths.MAX_PATH_REQUEST_SIZE
+        # Note to request_size:
+        # when the request is made with 'genres' context, the response strangely does not respect the number of objects
+        # requested of 48, returning 1 more item, i couldn't understand why. So to avoid limit to 45.
+        request_size = 40  # apipaths.MAX_PATH_REQUEST_SIZE
         response_size = request_size + 1
-        # Note: when the request is made with 'genres' context,
-        # the response strangely does not respect the number of objects
-        # requested, returning 1 more item, i couldn't understand why
+
+        genre_length_fix = 0
+        genre_fix_firstrun = False
         if context_name == 'genres':
-            response_size += 1
+            genre_fix_firstrun = True
 
         number_of_requests = 2
         perpetual_range_start = int(perpetual_range_start) if perpetual_range_start else 0
@@ -289,20 +294,35 @@ class NetflixSession(object):
 
         for n_req in range(number_of_requests):
             path_response = self._path_request(_set_range_selector(paths, range_start, range_end))
-            if len(path_response) != 0:
-                common.merge_dicts(path_response, merged_response)
-                response_count = response_length(path_response, *length_args)
-                if response_count >= response_size:
-                    range_start += response_size
-                    if n_req == (number_of_requests - 1):
-                        merged_response['_perpetual_range_selector'] = {'next_start': range_start}
-                        common.debug('{} has other elements, added _perpetual_range_selector item'.format(response_type))
-                    else:
-                        range_end = range_start + request_size
+            common.debug('path_response: ' + str(path_response))
+            if len(path_response) == 0:
+                # Some behavior may return no response
+                break
+            if not common.check_path_exists(count_args, path_response):
+                # With sorted lists, it may happen that the elements in the list match the response_size
+                # therefore the response of the next request will not include any result, without returning the key path
+                break
+            common.merge_dicts(path_response, merged_response)
+            response_length = length_lambda(path_response, *length_args)
+            response_count = count_lambda(merged_response, *count_args)
+
+            if genre_fix_firstrun and request_size < response_count:
+                genre_length_fix = response_count - request_size
+                genre_fix_firstrun = False
+            common.debug('response_length: ' + str(response_length))
+            common.debug('genre_length_fix: ' + str(genre_length_fix))
+            common.debug('response_count: ' + str(response_count))
+            if response_count < (response_length + genre_length_fix):
+                range_start += response_size
+                if n_req == (number_of_requests - 1) and not response_count <= response_length:
+                    merged_response['_perpetual_range_selector'] = {'next_start': range_start}
+                    common.debug('{} has other elements, added _perpetual_range_selector item'.format(count_args))
                 else:
-                    # There are no other elements to request
-                    break
+                    range_end = range_start + request_size
+                    if range_end > response_length:
+                        range_end = response_length
             else:
+                # There are no other elements to request
                 break
 
         if perpetual_range_start > 0:
@@ -312,7 +332,6 @@ class NetflixSession(object):
             else:
                 merged_response['_perpetual_range_selector'] = {'previous_start': previous_start}
         return merged_response
-
 
     @common.time_execution(immediate=True)
     def _path_request(self, paths):
