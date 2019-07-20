@@ -22,6 +22,8 @@
     <setting id="migrate_library" type="action" label="30140" action="RunPlugin(plugin://plugin.video.netflix/library/migrate/)"/>
     <setting id="customexportname" type="bool" label="No longer in use" default="true" visible="false"/>
     <setting id="invalidate_cache_on_mylist_modify" type="bool" label="No longer in use" default="true" visible="false"/>
+    <setting id="share_library_profiles" type="labelenum" label="30195" values="Auto|Enabled|Disabled" default="Auto"/> <!-- this settings should be visible only from 0.14.9 release -->
+    <setting id="share_library_profiles_info" type="text" label="30196" default="" enable="false" subsetting="true"/> <!-- this settings should be visible only from 0.14.9 release -->
     <setting label="30065" type="lsep"/><!--Auto-Update-->
     <setting id="auto_update" type="enum" label="30064" lvalues="30066|30067|30068|30069|30070" default="0"/>
     <setting id="update_time" type="time" label="30071" visible="gt(-1,0)" default="00:00" subsetting="true"/>

@@ -796,3 +796,10 @@ msgctxt "#30194"
 msgid "Limit video stream resolution to"
 msgstr ""
 
+msgctxt "#30195"
+msgid "Share library info with all profiles"
+msgstr ""
+
+msgctxt "#30196"
+msgid "Warning!! Enable only if you have lost the \"watched\" status"
+msgstr ""

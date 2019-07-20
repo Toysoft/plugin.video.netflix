@@ -311,7 +311,15 @@ class GlobalVariables(object):
         if not previous_version:
             previous_version = g.VERSION
         import resources.lib.common as common
-        # <Do something here>
+        # INIT ---------------------------------------------->> this part should be implemented on 0.14.9 release
+        if 'Auto' in self.ADDON.getSettingString('share_library_profiles'):
+            if common.is_minimum_version('0.14.8', previous_version):
+                # Transition only for users from older versions
+                self.ADDON.setSettingString('share_library_profiles', 'Enabled')
+            else:
+                # All new addon installations must use this new standard
+                self.ADDON.setSettingString('share_library_profiles', 'Disabled')
+        # END ---------------------------------------------->> this part should be implemented on 0.14.9 release
         # Always leave last - After the operations set current version
         self.ADDON.setSettingString('addon_previous_version', current_version)
 
