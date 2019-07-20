@@ -247,6 +247,7 @@ class GlobalVariables(object):
         Initial addon configuration,
         helps users to automatically configure addon parameters for proper viewing of videos
         """
+        self._version_upgrade_controller()
         run_initial_config = self.ADDON.getSettingBool('run_init_configuration')
         if run_initial_config:
             import resources.lib.common as common
@@ -297,6 +298,22 @@ class GlobalVariables(object):
                 self.ADDON.setSettingBool('enable_hevc_profiles', False)
             self.ADDON.setSettingBool('run_init_configuration', False)
             self.SETTINGS_MONITOR_IGNORE = False
+
+    def _version_upgrade_controller(self):
+        """
+        Custom upgrade operations for version jump
+        """
+        current_version = g.VERSION
+        previous_version = self.ADDON.getSettingString('addon_previous_version')
+        if current_version == previous_version:
+            # Operations should be already been performed
+            return
+        if not previous_version:
+            previous_version = g.VERSION
+        import resources.lib.common as common
+        # <Do something here>
+        # Always leave last - After the operations set current version
+        self.ADDON.setSettingString('addon_previous_version', current_version)
 
     def init_persistent_storage(self):
         """
