@@ -48,7 +48,7 @@ class MSLRequestBuilder(object):
             'headerdata':
                 base64.standard_b64encode(
                     self._headerdata(is_key_request=True, is_handshake=True,
-                                     compression=None, esn=esn)),
+                                     compression=None, esn=esn).encode('utf-8')).decode('utf-8'),
             'signature': ''
         }, sort_keys=True)
 

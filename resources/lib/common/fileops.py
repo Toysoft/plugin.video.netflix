@@ -55,7 +55,7 @@ def save_file(filename, content, mode='w'):
     file_handle = xbmcvfs.File(
         xbmc.translatePath(os.path.join(g.DATA_PATH, filename)), mode)
     try:
-        file_handle.write(content.encode('utf-8'))
+        file_handle.write(content)
     finally:
         file_handle.close()
 
