@@ -18,8 +18,7 @@ except NameError:  # Python 3
 def show_notification(msg, title='Netflix', time=3000):
     """Show a notification"""
     xbmc.executebuiltin('Notification({}, {}, {}, {})'
-                        .format(title, msg, time, g.ICON)
-                        .encode('utf-8'))
+                        .format(title, msg, time, g.ICON))
 
 
 def ask_credentials():

@@ -29,10 +29,10 @@ def encrypt_credential(raw):
         from Cryptodome import Random
         from Cryptodome.Cipher import AES
         from Cryptodome.Util import Padding
-    raw = bytes(Padding.pad(data_to_pad=raw, block_size=__BLOCK_SIZE__))
+    raw = bytes(Padding.pad(data_to_pad=raw.encode('utf-8'), block_size=__BLOCK_SIZE__))
     iv = Random.new().read(AES.block_size)
     cipher = AES.new(get_crypt_key(), AES.MODE_CBC, iv)
-    return base64.b64encode(iv + cipher.encrypt(raw))
+    return base64.b64encode(iv + cipher.encrypt(raw)).decode('utf-8')
 
 
 def decrypt_credential(enc, secret=None):
