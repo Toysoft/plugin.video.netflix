@@ -118,7 +118,7 @@ class AndroidMSLCrypto(MSLBaseCrypto):
 
     def sign(self, message):
         """Sign a message"""
-        signature = self.crypto_session.Sign(self.hmac_key_id, message)
+        signature = self.crypto_session.Sign(self.hmac_key_id, message.encode('utf-8'))
         if not signature:
             raise MSLError('Widevine CryptoSession sign failed!')
         return base64.standard_b64encode(signature).decode('utf-8')

@@ -70,8 +70,8 @@ def get_credentials():
     verify_credentials(email and password)
     try:
         return {
-            'email': decrypt_credential(email),
-            'password': decrypt_credential(password)
+            'email': decrypt_credential(email).decode('utf-8'),
+            'password': decrypt_credential(password).decode('utf-8')
         }
     except Exception:
         import traceback

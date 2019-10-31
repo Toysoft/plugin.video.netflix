@@ -82,7 +82,7 @@ class DefaultMSLCrypto(MSLBaseCrypto):
     def sign(self, message):
         """Sign a message"""
         return base64.standard_b64encode(
-            HMAC.new(self.sign_key, message, SHA256).digest()).decode('utf-8')
+            HMAC.new(self.sign_key, message.encode('utf-8'), SHA256).digest()).decode('utf-8')
 
     def _init_keys(self, key_response_data):
         cipher = PKCS1_OAEP.new(self.rsa_key)
@@ -90,8 +90,8 @@ class DefaultMSLCrypto(MSLBaseCrypto):
             key_response_data['keydata']['encryptionkey'])
         encrypted_sign_key = base64.standard_b64decode(
             key_response_data['keydata']['hmackey'])
-        self.encryption_key = _decrypt_key(encrypted_encryption_key, cipher)
-        self.sign_key = _decrypt_key(encrypted_sign_key, cipher)
+        self.encryption_key = _decrypt_key(encrypted_encryption_key, cipher).decode('utf-8')
+        self.sign_key = _decrypt_key(encrypted_sign_key, cipher).decode('utf-8')
 
     def _export_keys(self):
         return {

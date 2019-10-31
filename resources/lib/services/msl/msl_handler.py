@@ -399,14 +399,11 @@ def _decrypt_chunks(chunks, crypto):
         # uncompress data if compressed
         if plaintext.get('compressionalgo') == 'GZIP':
             decoded_data = base64.standard_b64decode(data)
-            data = zlib.decompress(decoded_data, 16 + zlib.MAX_WBITS)
+            data = zlib.decompress(decoded_data, 16 + zlib.MAX_WBITS).decode('utf-8')
         else:
-            data = base64.standard_b64decode(data)
+            data = base64.standard_b64decode(data).decode('utf-8')
 
-        if isinstance(data, str):
-            decrypted_payload += unicode(data).encode('utf-8')
-        else:
-            decrypted_payload += data
+        decrypted_payload += data
 
     return json.loads(decrypted_payload)
 

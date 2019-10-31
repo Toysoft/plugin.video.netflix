@@ -97,7 +97,7 @@ class NetflixSession(object):
     @property
     def account_hash(self):
         """The unique hash of the current account"""
-        return urlsafe_b64encode(common.get_credentials().get('email', 'NoMail')).decode('utf-8')
+        return urlsafe_b64encode(common.get_credentials().get('email', 'NoMail').encode('utf-8')).decode('utf-8')
 
     def update_session_data(self, old_esn=None):
         old_esn = old_esn or g.get_esn()

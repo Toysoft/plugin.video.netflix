@@ -152,7 +152,7 @@ class Cache(object):
         # Return maximum timestamp for library to prevent stale lock
         # overrides which may lead to inconsistencies
         timestamp = int(time())
-        return str(BUCKET_LOCKED.format(self.plugin_handle, timestamp))
+        return BUCKET_LOCKED.format(self.plugin_handle, timestamp)
 
     def get(self, bucket, identifier, use_disk_fallback=True):
         """Retrieve an item from a cache bucket"""
@@ -232,7 +232,7 @@ class Cache(object):
         for _ in range(1, 10):
             wnd_property = self.window.getProperty(_window_property(bucket))
             # pickle stores byte data, so we must compare against a str
-            if wnd_property.startswith(str('LOCKED')):
+            if wnd_property.startswith('LOCKED'):
                 self.common.debug('Waiting for release of {}'.format(bucket))
                 xbmc.sleep(50)
             else:
@@ -255,7 +255,7 @@ class Cache(object):
 
     def _lock(self, bucket):
         self.window.setProperty(_window_property(bucket),
-                                self.lock_marker())
+                                self.lock_marker().encode('utf-8'))
 
     def _get_from_disk(self, bucket, identifier):
         """Load a cache entry from disk and add it to the in memory bucket"""
@@ -294,7 +294,7 @@ class Cache(object):
 
         try:
             self.window.setProperty(_window_property(bucket),
-                                    pickle.dumps(contents))
+                                    pickle.dumps(contents).encode('utf-8'))
         except Exception as exc:
             self.common.error('Failed to persist {} to wnd properties: {}'
                               .format(bucket, exc))
