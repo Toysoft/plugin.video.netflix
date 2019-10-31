@@ -168,7 +168,7 @@ class MSLHandler(object):
             common.debug('Manifest for {} with ESN {} obtained from the cache'
                          .format(viewable_id, esn))
             # Save the manifest to disk as reference
-            common.save_file('manifest.json', json.dumps(manifest))
+            common.save_file('manifest.json', json.dumps(manifest).encode('utf-8'))
             return manifest
         except cache.CacheMiss:
             pass
@@ -242,7 +242,7 @@ class MSLHandler(object):
                                          esn,
                                          mt_validity)
         # Save the manifest to disk as reference
-        common.save_file('manifest.json', json.dumps(manifest))
+        common.save_file('manifest.json', json.dumps(manifest).encode('utf-8'))
         # Save the manifest to the cache to retrieve it during its validity
         expiration = int(manifest['expiration'] / 1000)
         g.CACHE.add(cache.CACHE_MANIFESTS, cache_identifier, manifest, eol=expiration)
@@ -275,7 +275,8 @@ class MSLHandler(object):
             }],
             'echo': 'sessionId'
         }
-
+        print('QUI')
+        print(str(license_request_data))
         response = self._chunked_request(ENDPOINTS['license'], license_request_data, g.get_esn())
         return response[0]['licenseResponseBase64']
 

@@ -90,8 +90,8 @@ class DefaultMSLCrypto(MSLBaseCrypto):
             key_response_data['keydata']['encryptionkey'])
         encrypted_sign_key = base64.standard_b64decode(
             key_response_data['keydata']['hmackey'])
-        self.encryption_key = _decrypt_key(encrypted_encryption_key, cipher).decode('utf-8')
-        self.sign_key = _decrypt_key(encrypted_sign_key, cipher).decode('utf-8')
+        self.encryption_key = _decrypt_key(encrypted_encryption_key, cipher)
+        self.sign_key = _decrypt_key(encrypted_sign_key, cipher)
 
     def _export_keys(self):
         return {
