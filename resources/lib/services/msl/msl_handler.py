@@ -275,8 +275,7 @@ class MSLHandler(object):
             }],
             'echo': 'sessionId'
         }
-        print('QUI')
-        print(str(license_request_data))
+
         response = self._chunked_request(ENDPOINTS['license'], license_request_data, g.get_esn())
         return response[0]['licenseResponseBase64']
 
