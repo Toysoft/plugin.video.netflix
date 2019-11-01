@@ -68,7 +68,7 @@ def ask_for_search_term():
 def _ask_for_input(heading):
     return xbmcgui.Dialog().input(
         heading=heading,
-        type=xbmcgui.INPUT_ALPHANUM).decode('utf-8') or None
+        type=xbmcgui.INPUT_ALPHANUM) or None
 
 
 def ask_for_removal_confirmation():
