@@ -187,6 +187,7 @@ class GlobalVariables(object):
         Needs to be called at start of each plugin instance!
         This is an ugly hack because Kodi doesn't execute statements defined on
         module level if reusing a language invoker."""
+        self.PY_IS_VER2 = sys.version_info.major == 2
         self.COOKIES = {}
         self.ADDON = xbmcaddon.Addon()
         self.ADDON_ID = self.ADDON.getAddonInfo('id')
