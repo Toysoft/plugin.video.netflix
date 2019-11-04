@@ -220,7 +220,7 @@ class GlobalVariables(object):
             self.PLUGIN_HANDLE = 0
         self.BASE_URL = '{scheme}://{netloc}'.format(scheme=self.URL[0],
                                                      netloc=self.URL[1])
-        self.PATH = unquote(self.URL[2][1:])
+        self.PATH = g.py2_decode(unquote(self.URL[2][1:]))
         try:
             self.PARAM_STRING = argv[2][1:]
         except IndexError:
@@ -397,6 +397,19 @@ class GlobalVariables(object):
         """Remove a level from the time trace"""
         self.time_trace_level -= 2
 
+    def py2_decode(self, value):
+        """Decode text only on python 2"""
+        # To remove when Kodi 18 support is over / Py2 dead
+        if self.PY_IS_VER2:
+            return value.decode('utf-8')
+        return value
+
+    def py2_encode(self, value):
+        """Encode text only on python 2"""
+        # To remove when Kodi 18 support is over / Py2 dead
+        if self.PY_IS_VER2:
+            return value.encode('utf-8')
+        return value
 
 # pylint: disable=invalid-name
 # This will have no effect most of the time, as it doesn't seem to be executed
