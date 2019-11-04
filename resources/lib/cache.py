@@ -240,7 +240,7 @@ class Cache(object):
             if wnd_property_data:
                 try:
                     wnd_property = pickle.loads(wnd_property_data)
-                except Exception: # pylint: disable=broad-except
+                except Exception:  # pylint: disable=broad-except
                     self.common.debug('No instance of {} found. Creating new instance.'
                                       .format(bucket))
             if isinstance(wnd_property, unicode) and wnd_property.startswith('LOCKED'):

@@ -411,6 +411,7 @@ class GlobalVariables(object):
             return value.encode('utf-8')
         return value
 
+
 # pylint: disable=invalid-name
 # This will have no effect most of the time, as it doesn't seem to be executed
 # on subsequent addon invocations when reuseLanguageInvoker is being used.

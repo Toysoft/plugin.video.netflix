@@ -458,7 +458,7 @@ def _write_strm_file(item_task, export_filename):
     filehandle = xbmcvfs.File(xbmc.translatePath(export_filename), 'wb')
     try:
         filehandle.write(bytearray(common.build_url(videoid=item_task['videoid'],
-                                          mode=g.MODE_PLAY).encode('utf-8')))
+                                                    mode=g.MODE_PLAY).encode('utf-8')))
     finally:
         filehandle.close()
 
@@ -478,7 +478,8 @@ def add_to_library(videoid, export_filename, nfo_export, exclude_update=False):
     if videoid.mediatype == common.VideoId.EPISODE:
         g.SHARED_DB.set_tvshow(videoid.tvshowid, nfo_export, exclude_update)
         g.SHARED_DB.insert_season(videoid.tvshowid, videoid.seasonid)
-        g.SHARED_DB.insert_episode(videoid.tvshowid, videoid.seasonid, videoid.value, export_filename)
+        g.SHARED_DB.insert_episode(videoid.tvshowid, videoid.seasonid,
+                                   videoid.value, export_filename)
     elif videoid.mediatype == common.VideoId.MOVIE:
         g.SHARED_DB.set_movie(videoid.value, export_filename, nfo_export)
 
