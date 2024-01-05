@@ -2,7 +2,7 @@ codecov
 kodi-addon-checker
 polib
 pycrypto==2.6.1
-pycryptodomex==3.4.5
+pycryptodomex==3.19.1
 pydes==2.0.1
 pylint==1.6.5
 requests==2.31.0
